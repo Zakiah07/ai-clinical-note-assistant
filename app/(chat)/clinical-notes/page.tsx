@@ -22,6 +22,14 @@ interface ClinicalNote {
   diagnoses: string[];
   followUpQuestions: string[];
   flaggedWords: string[];
+  objective: {
+    content: string;
+    categories: {
+      mentalStatusExam: string;
+      physicalObservations: string;
+      behavioralObservations: string;
+    };
+  };
   assessment: {
     content: string;
     categories: {
@@ -87,15 +95,21 @@ export default function ClinicalNotesApp() {
                 <Stethoscope className="size-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">Clinical Notes Assistant</h1>
-                <p className="text-sm text-slate-600">AI-Powered Clinical Documentation</p>
+                <h1 className="text-2xl font-bold text-slate-900">
+                  Clinical Notes Assistant
+                </h1>
+                <p className="text-sm text-slate-600">
+                  AI-Powered Clinical Documentation
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 px-4 py-2">
                 <div className="flex items-center space-x-2">
                   <User className="size-4 text-slate-500" />
-                  <span className="text-sm font-medium text-slate-700">Patient ID: {patientId}</span>
+                  <span className="text-sm font-medium text-slate-700">
+                    Patient ID: {patientId}
+                  </span>
                 </div>
                 <div className="text-xs text-slate-500 mt-1">
                   {new Date().toLocaleDateString()}
@@ -123,24 +137,23 @@ export default function ClinicalNotesApp() {
           <div className="lg:col-span-2 space-y-6">
             {clinicalNote ? (
               <>
-                <RiskAssessment 
-                  riskFlags={clinicalNote.riskFlags}
-                />
-                <KeyFindings 
+                <RiskAssessment riskFlags={clinicalNote.riskFlags} />
+                <KeyFindings
                   keySymptoms={clinicalNote.keySymptoms}
                   diagnoses={clinicalNote.diagnoses}
                 />
-                <SessionSummary 
+                <SessionSummary
                   sessionSummary={clinicalNote.sessionSummary}
                   flaggedWords={clinicalNote.flaggedWords}
                 />
-                <StructuredClinicalNote 
+                <StructuredClinicalNote
                   structuredNote={clinicalNote.structuredNote}
                   flaggedWords={clinicalNote.flaggedWords}
+                  objective={clinicalNote.objective}
                   assessment={clinicalNote.assessment}
                   plan={clinicalNote.plan}
                 />
-                <FollowUpQuestions 
+                <FollowUpQuestions
                   followUpQuestions={clinicalNote.followUpQuestions}
                 />
               </>

@@ -2,12 +2,30 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileText, User, Activity, ClipboardList, Target, AlertTriangle, Stethoscope, AlertCircle, Clock, Shield } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import {
+  FileText,
+  User,
+  Activity,
+  ClipboardList,
+  Target,
+  AlertTriangle,
+  Stethoscope,
+  AlertCircle,
+  Clock,
+  Shield,
+} from 'lucide-react';
 
 interface StructuredClinicalNoteProps {
   structuredNote: string;
   flaggedWords: string[];
+  objective?: {
+    content: string;
+    categories: {
+      mentalStatusExam: string;
+      physicalObservations: string;
+      behavioralObservations: string;
+    };
+  };
   assessment?: {
     content: string;
     categories: {
@@ -27,39 +45,48 @@ interface StructuredClinicalNoteProps {
   };
 }
 
-export default function StructuredClinicalNote({ 
-  structuredNote, 
+export default function StructuredClinicalNote({
+  structuredNote,
   flaggedWords,
+  objective,
   assessment,
-  plan
+  plan,
 }: StructuredClinicalNoteProps) {
- 
   const highlightFlaggedWords = (text: string, flaggedWords: string[]) => {
     if (!flaggedWords || flaggedWords.length === 0) {
       return text;
     }
 
     let highlightedText = text;
-    flaggedWords.forEach(word => {
+    flaggedWords.forEach((word) => {
       const regex = new RegExp(`\\b${word}\\b`, 'gi');
-      highlightedText = highlightedText.replace(regex, `<span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded-md font-medium text-sm">${word}</span>`);
+      highlightedText = highlightedText.replace(
+        regex,
+        `<span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded-md font-medium text-sm">${word}</span>`,
+      );
     });
 
     return highlightedText;
   };
 
-  const renderSection = (title: string, content: string, icon: React.ReactNode, borderColor: string, bgColor: string, textColor: string, accentColor: string) => {
+  const renderSection = (
+    title: string,
+    content: string,
+    icon: React.ReactNode,
+    borderColor: string,
+    bgColor: string,
+    textColor: string,
+    accentColor: string,
+  ) => {
     if (!content.trim()) {
       return (
-        <div className={`bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden`}>
+        <div
+          className={`bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden`}
+        >
           <div className={`${bgColor} px-6 py-4 border-b border-slate-200`}>
             <div className="flex items-center space-x-3">
-              <div className={`p-2 rounded-lg ${accentColor}`}>
-                {icon}
-              </div>
-              <h3 className={`text-lg font-semibold ${textColor}`}>
-                {title}
-              </h3>
+              <div className={`p-2 rounded-lg ${accentColor}`}>{icon}</div>
+              <h3 className={`text-lg font-semibold ${textColor}`}>{title}</h3>
             </div>
           </div>
           <div className="p-6">
@@ -72,15 +99,13 @@ export default function StructuredClinicalNote({
     }
 
     return (
-      <div className={`bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden`}>
+      <div
+        className={`bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden`}
+      >
         <div className={`${bgColor} px-6 py-4 border-b border-slate-200`}>
           <div className="flex items-center space-x-3">
-            <div className={`p-2 rounded-lg ${accentColor}`}>
-              {icon}
-            </div>
-            <h3 className={`text-lg font-semibold ${textColor}`}>
-              {title}
-            </h3>
+            <div className={`p-2 rounded-lg ${accentColor}`}>{icon}</div>
+            <h3 className={`text-lg font-semibold ${textColor}`}>{title}</h3>
           </div>
         </div>
         <div className="p-6">
@@ -88,15 +113,21 @@ export default function StructuredClinicalNote({
             {content.split('- ').map((item, index) => {
               if (item.trim()) {
                 const [title, ...contentParts] = item.split(':');
+                const itemKey = `${title?.trim()}-${contentParts.join()}`;
                 return (
-                  <div key={index} className="space-y-2">
-                    <div className={`font-semibold ${textColor} text-sm tracking-wide uppercase`}>
+                  <div key={itemKey} className="space-y-2">
+                    <div
+                      className={`font-semibold ${textColor} text-sm tracking-wide uppercase`}
+                    >
                       {title?.trim()}
                     </div>
-                    <div 
+                    <div
                       className="text-slate-700 leading-relaxed text-sm"
                       dangerouslySetInnerHTML={{
-                        __html: highlightFlaggedWords(contentParts.join(':').trim(), flaggedWords)
+                        __html: highlightFlaggedWords(
+                          contentParts.join(':').trim(),
+                          flaggedWords,
+                        ),
                       }}
                     />
                   </div>
@@ -111,21 +142,28 @@ export default function StructuredClinicalNote({
   };
 
   const renderPatientInfoSection = () => {
-    const patientInfoContent = extractSectionContent('PATIENT INFORMATION', 'Patient Information');
+    const patientInfoContent = extractSectionContent(
+      'PATIENT INFORMATION',
+      'Patient Information',
+    );
 
     return renderSection(
-      'Patient Information', 
-      patientInfoContent, 
+      'Patient Information',
+      patientInfoContent,
       <User className="size-4 text-white" />,
-      'border-indigo-500', 
-      'bg-indigo-50', 
-      'text-indigo-900', 
-      'bg-indigo-500'
+      'border-indigo-500',
+      'bg-indigo-50',
+      'text-indigo-900',
+      'bg-indigo-500',
     );
   };
 
   const renderAssessmentSection = () => {
-    if (!assessment || !assessment.content || assessment.content === 'No assessment data available.') {
+    if (
+      !assessment ||
+      !assessment.content ||
+      assessment.content === 'No assessment data available.'
+    ) {
       return renderSection(
         'Assessment',
         '',
@@ -133,7 +171,7 @@ export default function StructuredClinicalNote({
         'border-orange-500',
         'bg-orange-50',
         'text-orange-900',
-        'bg-orange-500'
+        'bg-orange-500',
       );
     }
 
@@ -153,18 +191,25 @@ export default function StructuredClinicalNote({
           <div className="space-y-6">
             {/* Primary Diagnosis */}
             {assessment.categories.primaryDiagnosis && (
-                <>
+              <>
                 <div className="flex items-center space-x-3 mb-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Stethoscope className="size-4 text-blue-600" />
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Stethoscope className="size-4 text-blue-600" />
+                  </div>
+                  <h4 className="font-semibold text-blue-900 text-sm">
+                    Primary Diagnosis
+                  </h4>
                 </div>
-                <h4 className="font-semibold text-blue-900 text-sm">Primary Diagnosis</h4>
-              </div><div
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(assessment.categories.primaryDiagnosis, flaggedWords)
-                  }} />
-                  </>
+                    __html: highlightFlaggedWords(
+                      assessment.categories.primaryDiagnosis,
+                      flaggedWords,
+                    ),
+                  }}
+                />
+              </>
             )}
 
             {/* Differential Diagnoses */}
@@ -174,12 +219,17 @@ export default function StructuredClinicalNote({
                   <div className="p-2 bg-purple-100 rounded-lg">
                     <ClipboardList className="size-4 text-purple-600" />
                   </div>
-                  <h4 className="font-semibold text-purple-900 text-sm">Differential Diagnoses</h4>
+                  <h4 className="font-semibold text-purple-900 text-sm">
+                    Differential Diagnoses
+                  </h4>
                 </div>
-                <div 
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(assessment.categories.differentialDiagnoses, flaggedWords)
+                    __html: highlightFlaggedWords(
+                      assessment.categories.differentialDiagnoses,
+                      flaggedWords,
+                    ),
                   }}
                 />
               </div>
@@ -192,34 +242,47 @@ export default function StructuredClinicalNote({
                   <div className="p-2 bg-red-100 rounded-lg">
                     <AlertTriangle className="size-4 text-red-600" />
                   </div>
-                  <h4 className="font-semibold text-red-900 text-sm">Risk Assessment</h4>
+                  <h4 className="font-semibold text-red-900 text-sm">
+                    Risk Assessment
+                  </h4>
                 </div>
-                <div 
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(assessment.categories.riskAssessment, flaggedWords)
+                    __html: highlightFlaggedWords(
+                      assessment.categories.riskAssessment,
+                      flaggedWords,
+                    ),
                   }}
                 />
               </div>
             )}
 
             {/* Fallback for uncategorized content */}
-            {(!assessment.categories.primaryDiagnosis && !assessment.categories.differentialDiagnoses && !assessment.categories.riskAssessment) && assessment.content && (
-              <div>
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="p-2 bg-slate-100 rounded-lg">
-                    <ClipboardList className="size-4 text-slate-600" />
+            {!assessment.categories.primaryDiagnosis &&
+              !assessment.categories.differentialDiagnoses &&
+              !assessment.categories.riskAssessment &&
+              assessment.content && (
+                <div>
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="p-2 bg-slate-100 rounded-lg">
+                      <ClipboardList className="size-4 text-slate-600" />
+                    </div>
+                    <h4 className="font-semibold text-slate-900 text-sm">
+                      Assessment Summary
+                    </h4>
                   </div>
-                  <h4 className="font-semibold text-slate-900 text-sm">Assessment Summary</h4>
+                  <div
+                    className="text-sm text-slate-700 leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightFlaggedWords(
+                        assessment.content,
+                        flaggedWords,
+                      ),
+                    }}
+                  />
                 </div>
-                <div 
-                  className="text-sm text-slate-700 leading-relaxed"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(assessment.content, flaggedWords)
-                  }}
-                />
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>
@@ -235,7 +298,7 @@ export default function StructuredClinicalNote({
         'border-purple-500',
         'bg-purple-50',
         'text-purple-900',
-        'bg-purple-500'
+        'bg-purple-500',
       );
     }
 
@@ -246,9 +309,7 @@ export default function StructuredClinicalNote({
             <div className="p-2 rounded-lg bg-purple-500">
               <Target className="size-4 text-white" />
             </div>
-            <h3 className="text-lg font-semibold text-purple-900">
-              Plan
-            </h3>
+            <h3 className="text-lg font-semibold text-purple-900">Plan</h3>
           </div>
         </div>
         <div className="p-6">
@@ -260,12 +321,17 @@ export default function StructuredClinicalNote({
                   <div className="p-2 bg-red-100 rounded-lg">
                     <AlertCircle className="size-4 text-red-600" />
                   </div>
-                  <h4 className="font-semibold text-red-900 text-sm">Immediate Interventions</h4>
+                  <h4 className="font-semibold text-red-900 text-sm">
+                    Immediate Interventions
+                  </h4>
                 </div>
-                <div 
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(plan.categories.immediateInterventions, flaggedWords)
+                    __html: highlightFlaggedWords(
+                      plan.categories.immediateInterventions,
+                      flaggedWords,
+                    ),
                   }}
                 />
               </div>
@@ -278,12 +344,17 @@ export default function StructuredClinicalNote({
                   <div className="p-2 bg-blue-100 rounded-lg">
                     <Target className="size-4 text-blue-600" />
                   </div>
-                  <h4 className="font-semibold text-blue-900 text-sm">Treatment Recommendations</h4>
+                  <h4 className="font-semibold text-blue-900 text-sm">
+                    Treatment Recommendations
+                  </h4>
                 </div>
-                <div 
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(plan.categories.treatmentRecommendations, flaggedWords)
+                    __html: highlightFlaggedWords(
+                      plan.categories.treatmentRecommendations,
+                      flaggedWords,
+                    ),
                   }}
                 />
               </div>
@@ -296,12 +367,17 @@ export default function StructuredClinicalNote({
                   <div className="p-2 bg-green-100 rounded-lg">
                     <Clock className="size-4 text-green-600" />
                   </div>
-                  <h4 className="font-semibold text-green-900 text-sm">Follow-up Plan</h4>
+                  <h4 className="font-semibold text-green-900 text-sm">
+                    Follow-up Plan
+                  </h4>
                 </div>
-                <div 
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(plan.categories.followUpPlan, flaggedWords)
+                    __html: highlightFlaggedWords(
+                      plan.categories.followUpPlan,
+                      flaggedWords,
+                    ),
                   }}
                 />
               </div>
@@ -314,54 +390,83 @@ export default function StructuredClinicalNote({
                   <div className="p-2 bg-orange-100 rounded-lg">
                     <Shield className="size-4 text-orange-600" />
                   </div>
-                  <h4 className="font-semibold text-orange-900 text-sm">Safety Measures</h4>
+                  <h4 className="font-semibold text-orange-900 text-sm">
+                    Safety Measures
+                  </h4>
                 </div>
-                <div 
+                <div
                   className="text-sm text-slate-700 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(plan.categories.safetyMeasures, flaggedWords)
+                    __html: highlightFlaggedWords(
+                      plan.categories.safetyMeasures,
+                      flaggedWords,
+                    ),
                   }}
                 />
               </div>
             )}
 
             {/* Fallback for uncategorized content */}
-            {(!plan.categories.immediateInterventions && !plan.categories.treatmentRecommendations && !plan.categories.followUpPlan && !plan.categories.safetyMeasures) && plan.content && (
-              <div className="bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-xl p-4">
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="p-2 bg-slate-100 rounded-lg">
-                    <Target className="size-4 text-slate-600" />
+            {!plan.categories.immediateInterventions &&
+              !plan.categories.treatmentRecommendations &&
+              !plan.categories.followUpPlan &&
+              !plan.categories.safetyMeasures &&
+              plan.content && (
+                <div className="bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-xl p-4">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="p-2 bg-slate-100 rounded-lg">
+                      <Target className="size-4 text-slate-600" />
+                    </div>
+                    <h4 className="font-semibold text-slate-900 text-sm">
+                      Treatment Plan Summary
+                    </h4>
                   </div>
-                  <h4 className="font-semibold text-slate-900 text-sm">Treatment Plan Summary</h4>
+                  <div
+                    className="text-sm text-slate-700 leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightFlaggedWords(plan.content, flaggedWords),
+                    }}
+                  />
                 </div>
-                <div 
-                  className="text-sm text-slate-700 leading-relaxed"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightFlaggedWords(plan.content, flaggedWords)
-                  }}
-                />
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>
     );
   };
 
-  const extractSectionContent = (sectionName: string, fallbackSectionName?: string) => {
+  const extractSectionContent = (
+    sectionName: string,
+    fallbackSectionName?: string,
+  ) => {
     let content = '';
-    if (structuredNote.includes(sectionName.toUpperCase() + ':')) {
-      content = structuredNote.split(sectionName.toUpperCase() + ':')[1]?.split('OBJECTIVE:')[0] || 
-                structuredNote.split(sectionName.toUpperCase() + ':')[1]?.split('ASSESSMENT:')[0] || 
-                structuredNote.split(sectionName.toUpperCase() + ':')[1]?.split('PLAN:')[0] || '';
-    } else if (structuredNote.includes(sectionName + ':')) {
-      content = structuredNote.split(sectionName + ':')[1]?.split('Objective:')[0] || 
-                structuredNote.split(sectionName + ':')[1]?.split('Assessment:')[0] || 
-                structuredNote.split(sectionName + ':')[1]?.split('Plan:')[0] || '';
-    } else if (fallbackSectionName && structuredNote.includes(fallbackSectionName)) {
-      content = structuredNote.split(fallbackSectionName)[1]?.split('Objective')[0] || 
-                structuredNote.split(fallbackSectionName)[1]?.split('Assessment')[0] || 
-                structuredNote.split(fallbackSectionName)[1]?.split('Plan')[0] || '';
+    if (structuredNote.includes(`${sectionName.toUpperCase()}:`)) {
+      content =
+        structuredNote
+          .split(`${sectionName.toUpperCase()}:`)[1]
+          ?.split('OBJECTIVE:')[0] ||
+        structuredNote
+          .split(`${sectionName.toUpperCase()}:`)[1]
+          ?.split('ASSESSMENT:')[0] ||
+        structuredNote
+          .split(`${sectionName.toUpperCase()}:`)[1]
+          ?.split('PLAN:')[0] ||
+        '';
+    } else if (structuredNote.includes(`${sectionName}:`)) {
+      content =
+        structuredNote.split(`${sectionName}:`)[1]?.split('Objective:')[0] ||
+        structuredNote.split(`${sectionName}:`)[1]?.split('Assessment:')[0] ||
+        structuredNote.split(`${sectionName}:`)[1]?.split('Plan:')[0] ||
+        '';
+    } else if (
+      fallbackSectionName &&
+      structuredNote.includes(fallbackSectionName)
+    ) {
+      content =
+        structuredNote.split(fallbackSectionName)[1]?.split('Objective')[0] ||
+        structuredNote.split(fallbackSectionName)[1]?.split('Assessment')[0] ||
+        structuredNote.split(fallbackSectionName)[1]?.split('Plan')[0] ||
+        '';
     }
     return content.trim();
   };
@@ -377,11 +482,15 @@ export default function StructuredClinicalNote({
               <FileText className="size-5 text-blue-600" />
             </div>
             <div>
-              <span className="text-xl font-semibold">Structured Clinical Note</span>
+              <span className="text-xl font-semibold">
+                Structured Clinical Note
+              </span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">SOAP Format</span>
+            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
+              SOAP Format
+            </span>
           </div>
         </CardTitle>
       </CardHeader>
@@ -394,15 +503,99 @@ export default function StructuredClinicalNote({
             {/* SOAP Format Sections */}
             <div className="space-y-6">
               {/* Objective */}
-              {renderSection(
-                'Objective', 
-                objectiveContent, 
-                <Activity className="size-4 text-white" />,
-                'border-green-500', 
-                'bg-green-50', 
-                'text-green-900', 
-                'bg-green-500'
-              )}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-green-200">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-lg bg-green-500">
+                      <Activity className="size-4 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-green-900">
+                      Objective
+                    </h3>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-6">
+                    {/* Mental Status Exam */}
+                    {objective?.categories?.mentalStatusExam && (
+                      <div>
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            <Activity className="size-4 text-blue-600" />
+                          </div>
+                          <h4 className="font-semibold text-blue-900 text-sm">
+                            Mental Status Exam
+                          </h4>
+                        </div>
+                        <div
+                          className="text-sm text-slate-700 leading-relaxed"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightFlaggedWords(
+                              objective.categories.mentalStatusExam,
+                              flaggedWords,
+                            ),
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Physical Observations */}
+                    {objective?.categories?.physicalObservations && (
+                      <div>
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="p-2 bg-purple-100 rounded-lg">
+                            <Activity className="size-4 text-purple-600" />
+                          </div>
+                          <h4 className="font-semibold text-purple-900 text-sm">
+                            Physical Observations
+                          </h4>
+                        </div>
+                        <div
+                          className="text-sm text-slate-700 leading-relaxed"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightFlaggedWords(
+                              objective.categories.physicalObservations,
+                              flaggedWords,
+                            ),
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Behavioral Observations */}
+                    {objective?.categories?.behavioralObservations && (
+                      <div>
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="p-2 bg-orange-100 rounded-lg">
+                            <Activity className="size-4 text-orange-600" />
+                          </div>
+                          <h4 className="font-semibold text-orange-900 text-sm">
+                            Behavioral Observations
+                          </h4>
+                        </div>
+                        <div
+                          className="text-sm text-slate-700 leading-relaxed"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightFlaggedWords(
+                              objective.categories.behavioralObservations,
+                              flaggedWords,
+                            ),
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Show message if no categorized objective data */}
+                    {!objective?.categories?.mentalStatusExam &&
+                      !objective?.categories?.physicalObservations &&
+                      !objective?.categories?.behavioralObservations && (
+                        <div className="text-slate-500 italic text-sm">
+                          No objective data available
+                        </div>
+                      )}
+                  </div>
+                </div>
+              </div>
 
               {/* Assessment - Now using categorized data */}
               {renderAssessmentSection()}
@@ -411,33 +604,34 @@ export default function StructuredClinicalNote({
               {renderPlanSection()}
             </div>
 
-            {!structuredNote.includes('OBJECTIVE:') && !structuredNote.includes('Objective') && (
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-lg bg-slate-500">
-                      <FileText className="size-4 text-white" />
+            {!structuredNote.includes('OBJECTIVE:') &&
+              !structuredNote.includes('Objective') && (
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 rounded-lg bg-slate-500">
+                        <FileText className="size-4 text-white" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        Clinical Note
+                      </h3>
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-900">
-                      Clinical Note
-                    </h3>
+                  </div>
+                  <div className="p-6">
+                    <div className="text-sm text-slate-700 leading-relaxed">
+                      <pre className="whitespace-pre-wrap font-sans">
+                        {objective?.content}
+                      </pre>
+                    </div>
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="text-sm text-slate-700 leading-relaxed">
-                    <pre className="whitespace-pre-wrap font-sans">
-                      {structuredNote}
-                    </pre>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
 
             {/* Footer with metadata */}
             <div className="border-t border-slate-200 pt-6 mt-8">
               <div className="flex items-center justify-between text-xs text-slate-500">
                 <span className="flex items-center space-x-2">
-                  <div className="size-2 bg-blue-500 rounded-full"></div>
+                  <div className="size-2 bg-blue-500 rounded-full" />
                   <span>Generated by AI Clinical Assistant</span>
                 </span>
                 <span>{new Date().toLocaleString()}</span>
@@ -448,4 +642,4 @@ export default function StructuredClinicalNote({
       </CardContent>
     </Card>
   );
-} 
+}

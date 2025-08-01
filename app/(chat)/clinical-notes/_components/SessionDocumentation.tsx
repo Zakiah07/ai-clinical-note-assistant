@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Brain, MessageSquare, Clock } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
 interface SessionDocumentationProps {
   sessionInput: string;
@@ -39,9 +40,9 @@ export default function SessionDocumentation({
       <CardContent className="p-6">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <Label className="block text-sm font-medium text-slate-700 mb-2">
               Session Notes & Observations
-            </label>
+            </Label>
             <Textarea
               placeholder="Enter your session notes, patient observations, symptoms discussed, interventions used, patient responses, and any other relevant clinical information..."
               value={sessionInput}
@@ -56,7 +57,7 @@ export default function SessionDocumentation({
           >
             {isProcessing ? (
               <>
-                <div className="animate-spin rounded-full size-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full size-4 border-b-2 border-white mr-2" />
                 Processing Session...
               </>
             ) : (
@@ -70,4 +71,4 @@ export default function SessionDocumentation({
       </CardContent>
     </Card>
   );
-} 
+}

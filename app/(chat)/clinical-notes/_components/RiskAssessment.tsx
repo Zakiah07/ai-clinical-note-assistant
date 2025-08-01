@@ -22,35 +22,35 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
           colors: 'bg-red-50 border-red-200 text-red-900',
           badgeColors: 'bg-red-100 text-red-700 border-red-200',
           icon: <AlertTriangle className="size-4 text-red-600" />,
-          headerColors: 'bg-red-50 border-red-200'
+          headerColors: 'bg-red-50 border-red-200',
         };
       case 'medium':
         return {
           colors: 'bg-yellow-50 border-yellow-200 text-yellow-900',
           badgeColors: 'bg-yellow-100 text-yellow-700 border-yellow-200',
           icon: <AlertTriangle className="size-4 text-yellow-600" />,
-          headerColors: 'bg-yellow-50 border-yellow-200'
+          headerColors: 'bg-yellow-50 border-yellow-200',
         };
       case 'low':
         return {
           colors: 'bg-blue-50 border-blue-200 text-blue-900',
           badgeColors: 'bg-blue-100 text-blue-700 border-blue-200',
           icon: <Activity className="size-4 text-blue-600" />,
-          headerColors: 'bg-blue-50 border-blue-200'
+          headerColors: 'bg-blue-50 border-blue-200',
         };
       case 'none':
         return {
           colors: 'bg-green-50 border-green-200 text-green-900',
           badgeColors: 'bg-green-100 text-green-700 border-green-200',
           icon: <CheckCircle className="size-4 text-green-600" />,
-          headerColors: 'bg-green-50 border-green-200'
+          headerColors: 'bg-green-50 border-green-200',
         };
       default:
         return {
           colors: 'bg-gray-50 border-gray-200 text-gray-900',
           badgeColors: 'bg-gray-100 text-gray-700 border-gray-200',
           icon: <Shield className="size-4 text-gray-600" />,
-          headerColors: 'bg-gray-50 border-gray-200'
+          headerColors: 'bg-gray-50 border-gray-200',
         };
     }
   };
@@ -68,7 +68,9 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
           </div>
           <div>
             <span className="text-lg font-semibold">Risk Assessment</span>
-            <p className="text-sm text-red-700 font-medium">Safety & Clinical Risk Evaluation</p>
+            <p className="text-sm text-red-700 font-medium">
+              Safety & Clinical Risk Evaluation
+            </p>
           </div>
         </CardTitle>
       </CardHeader>
@@ -78,7 +80,7 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
             const config = getRiskConfig(flag.type);
             return (
               <div
-                key={index}
+                key={`risk-flag-${flag.category}-${flag.type}`}
                 className="p-4"
               >
                 <div className="flex items-start justify-between mb-3">
@@ -108,4 +110,4 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
       </CardContent>
     </Card>
   );
-} 
+}

@@ -9,8 +9,14 @@ interface KeyFindingsProps {
   diagnoses: string[];
 }
 
-export default function KeyFindings({ keySymptoms, diagnoses }: KeyFindingsProps) {
-  if ((!keySymptoms || keySymptoms.length === 0) && (!diagnoses || diagnoses.length === 0)) {
+export default function KeyFindings({
+  keySymptoms,
+  diagnoses,
+}: KeyFindingsProps) {
+  if (
+    (!keySymptoms || keySymptoms.length === 0) &&
+    (!diagnoses || diagnoses.length === 0)
+  ) {
     return null;
   }
 
@@ -25,14 +31,16 @@ export default function KeyFindings({ keySymptoms, diagnoses }: KeyFindingsProps
               </div>
               <div>
                 <span className="text-lg font-semibold">Key Symptoms</span>
-                <p className="text-sm text-orange-700 font-medium">Clinical Presentation</p>
+                <p className="text-sm text-orange-700 font-medium">
+                  Clinical Presentation
+                </p>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="space-y-3">
-              {keySymptoms.map((symptom, index) => (
-                <div key={index} className="flex items-center space-x-3">
+              {keySymptoms.map((symptom) => (
+                <div key={symptom} className="flex items-center space-x-3">
                   <Badge
                     variant="outline"
                     className="bg-orange-50 text-orange-700 border-orange-200 font-medium px-3 py-1"
@@ -54,15 +62,19 @@ export default function KeyFindings({ keySymptoms, diagnoses }: KeyFindingsProps
                 <Stethoscope className="size-5 text-purple-600" />
               </div>
               <div>
-                <span className="text-lg font-semibold">Clinical Diagnoses</span>
-                <p className="text-sm text-purple-700 font-medium">Assessment & Evaluation</p>
+                <span className="text-lg font-semibold">
+                  Clinical Diagnoses
+                </span>
+                <p className="text-sm text-purple-700 font-medium">
+                  Assessment & Evaluation
+                </p>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="space-y-3">
-              {diagnoses.map((diagnosis, index) => (
-                <div key={index} className="flex items-center space-x-3">
+              {diagnoses.map((diagnosis) => (
+                <div key={diagnosis} className="flex items-center space-x-3">
                   <Badge
                     variant="outline"
                     className="bg-purple-50 text-purple-700 border-purple-200 font-medium px-3 py-1"
@@ -75,7 +87,6 @@ export default function KeyFindings({ keySymptoms, diagnoses }: KeyFindingsProps
           </CardContent>
         </Card>
       )}
-
     </div>
   );
-} 
+}
