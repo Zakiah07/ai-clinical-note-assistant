@@ -9,5 +9,9 @@ export default async function Page() {
     redirect('/api/auth/guest');
   }
 
-  return <ClinicalNotesApp />;
+  return (
+    <div>
+      <ClinicalNotesApp />
+    </div>
+  );
 }

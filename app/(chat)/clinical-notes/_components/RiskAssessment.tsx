@@ -74,7 +74,7 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-2">
+      <CardContent className="p-2 text-black">
         <div className="space-y-4">
           {riskFlags.map((flag, index) => {
             const config = getRiskConfig(flag.type);
@@ -90,7 +90,7 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
                     </div>
                     <div>
                       <h4 className="font-semibold text-sm">{flag.category}</h4>
-                      <p className="text-xs opacity-75">Risk Category</p>
+                      <p className="text-xs">Risk Category</p>
                     </div>
                   </div>
                   <Badge
@@ -100,9 +100,7 @@ export default function RiskAssessment({ riskFlags }: RiskAssessmentProps) {
                     {flag.type.toUpperCase()} RISK
                   </Badge>
                 </div>
-                <p className="text-sm leading-relaxed opacity-90">
-                  {flag.description}
-                </p>
+                <p className="text-sm leading-relaxed">{flag.description}</p>
               </div>
             );
           })}

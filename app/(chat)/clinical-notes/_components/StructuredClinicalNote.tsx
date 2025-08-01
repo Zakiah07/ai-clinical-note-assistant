@@ -60,11 +60,6 @@ export default function StructuredClinicalNote({
               </span>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-              SOAP Format
-            </span>
-          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-8">

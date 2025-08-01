@@ -9,6 +9,7 @@ import KeyFindings from './_components/KeyFindings';
 import SessionSummary from './_components/SessionSummary';
 import FollowUpQuestions from './_components/FollowUpQuestions';
 import EmptyState from './_components/EmptyState';
+import ToggleMode from './_components/ToggleMode';
 
 interface ClinicalNote {
   structuredNote: string;
@@ -85,9 +86,9 @@ export default function ClinicalNotesApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-200">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-700 sticky top-0 z-10 transition-colors duration-200">
         <div className="max-w-7xl mx-auto p-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -95,26 +96,27 @@ export default function ClinicalNotesApp() {
                 <Stethoscope className="size-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white transition-colors duration-200">
                   Clinical Notes Assistant
                 </h1>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-slate-400 transition-colors duration-200">
                   AI-Powered Clinical Documentation
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 px-4 py-2">
+            <div className="flex items-center space-x-4 flex-col sm:flex-row space-y-2 sm:space-y-0">
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 dark:bg-slate-700 dark:border-slate-600 px-4 py-2 transition-colors duration-200">
                 <div className="flex items-center space-x-2">
                   <User className="size-4 text-slate-500" />
-                  <span className="text-sm font-medium text-slate-700">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                     <span>Dr. Sarah Johnson</span>
                   </span>
                 </div>
-                <div className="text-xs text-slate-500 mt-1">
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   {new Date().toLocaleDateString()}
                 </div>
               </div>
+              <ToggleMode />
             </div>
           </div>
         </div>

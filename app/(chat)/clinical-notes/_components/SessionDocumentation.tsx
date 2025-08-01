@@ -40,14 +40,14 @@ export default function SessionDocumentation({
       <CardContent className="p-6">
         <div className="space-y-4">
           <div>
-            <Label className="block text-sm font-medium text-slate-700 mb-2">
+            <Label className="block text-sm font-medium text-slate-400 mb-2">
               Session Notes & Observations
             </Label>
             <Textarea
               placeholder="Enter your session notes, patient observations, symptoms discussed, interventions used, patient responses, and any other relevant clinical information..."
               value={sessionInput}
               onChange={(e) => setSessionInput(e.target.value)}
-              className="min-h-[300px] border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+              className="min-h-[300px] md:min-h-[500px] border-slate-300 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
           <Button
