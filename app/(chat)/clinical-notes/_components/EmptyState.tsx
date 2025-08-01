@@ -1,5 +1,3 @@
-'use client';
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Brain } from 'lucide-react';
 
@@ -12,10 +10,10 @@ export default function EmptyState() {
           Ready to Process
         </h3>
         <p className="text-slate-500">
-          Enter your session notes and click &quot;Generate Clinical
-          Note&quot; to get started.
+          Enter your session notes and click &quot;Generate Clinical Note&quot;
+          to get started.
         </p>
       </CardContent>
     </Card>
   );
-} 
+}

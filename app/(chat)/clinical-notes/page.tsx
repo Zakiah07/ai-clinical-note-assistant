@@ -108,7 +108,7 @@ export default function ClinicalNotesApp() {
                 <div className="flex items-center space-x-2">
                   <User className="size-4 text-slate-500" />
                   <span className="text-sm font-medium text-slate-700">
-                    Patient ID: {patientId}
+                    <span>Dr. Sarah Johnson</span>
                   </span>
                 </div>
                 <div className="text-xs text-slate-500 mt-1">
